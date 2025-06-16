@@ -189,7 +189,7 @@ PlayerTab:CreateDropdown({
 -- Walk Speed
 PlayerTab:CreateSlider({
     Name = "Walk Speed",
-    Range = {16, 150},
+    Range = {1, 500},
     Increment = 1,
     Suffix = "Speed",
     CurrentValue = 16,
@@ -204,7 +204,7 @@ PlayerTab:CreateSlider({
 -- Jump Power
 PlayerTab:CreateSlider({
     Name = "Jump Power",
-    Range = {50, 200},
+    Range = {50, 500},
     Increment = 1,
     Suffix = "Power",
     CurrentValue = 50,
