@@ -495,6 +495,86 @@ local Paragraph = MapleHospitalTab:CreateParagraph({Title = "Scripts are Here!",
 local equipSpamConnection
 local equipSpeed = 0.1 -- default speed
 
+MapleHospitalTab:CreateButton({
+    Name = "Enable Auto Janitor",
+    Callback = function()
+        print("[Auto Janitor] Button clicked")
+
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local RunService = game:GetService("RunService")
+        local lp = Players.LocalPlayer
+
+        -- Get Character and Humanoid
+        local char = lp.Character or lp.CharacterAdded:Wait()
+        local humanoid = char:WaitForChild("Humanoid")
+        local rootPart = char:WaitForChild("HumanoidRootPart")
+
+        -- Anti-sit
+        humanoid:GetPropertyChangedSignal("Sit"):Connect(function()
+            RunService.Heartbeat:Wait()
+            humanoid.Sit = false
+        end)
+
+        -- Set Role
+        ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services")
+            :WaitForChild("RolesService"):WaitForChild("__comm__"):WaitForChild("RE")
+            :WaitForChild("SetRole"):FireServer("Janitor")
+
+        -- Equip Mop if needed
+        local MopTool = lp.Backpack:FindFirstChild("Mop")
+        if not MopTool then
+            print("[Auto Janitor] Requesting Mop")
+            ReplicatedStorage:WaitForChild("Events"):WaitForChild("Equip")
+                :FireServer(ReplicatedStorage:WaitForChild("Tools"):WaitForChild("Mop"))
+            repeat task.wait() until lp.Backpack:FindFirstChild("Mop")
+        end
+
+        MopTool = lp.Backpack:WaitForChild("Mop")
+        local Bottom = MopTool:WaitForChild("Bottom")
+        local Garbage = workspace:WaitForChild("Garbage")
+
+        workspace.FallenPartsDestroyHeight = 0/0 -- Infinite fall zone
+
+        -- Unequip and re-equip properly
+        humanoid:UnequipTools()
+        MopTool.Parent = char
+
+        -- Clean logic
+        local currentlycleaning = false
+        local function clean(Spill)
+            if not Spill:IsA("BasePart") then return end
+            if currentlycleaning then return end
+
+            currentlycleaning = true
+            local originalCFrame = rootPart.CFrame
+            print("[Auto Janitor] Cleaning:", Spill.Name)
+
+            repeat
+                MopTool.Parent = char
+                rootPart.CFrame = Spill.CFrame + Vector3.new(0, 2, 0)
+                firetouchinterest(Bottom, Spill, 0)
+                MopTool:Activate()
+                firetouchinterest(Bottom, Spill, 1)
+                RunService.Heartbeat:Wait()
+            until not Spill or not Spill:IsDescendantOf(workspace)
+
+            rootPart.CFrame = originalCFrame
+            currentlycleaning = false
+        end
+
+        -- Start cleaning
+        for _, v in pairs(Garbage:GetChildren()) do
+            clean(v)
+        end
+        Garbage.ChildAdded:Connect(clean)
+        print("[Auto Janitor] Running and waiting for new spills...")
+    end,
+})
+
+
+
+
 MapleHospitalTab:CreateSlider({
     Name = "Equip Spam Speed",
     Range = {0.00001, 1},
