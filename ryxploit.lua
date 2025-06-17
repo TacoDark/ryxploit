@@ -30,7 +30,7 @@ local Window = Rayfield:CreateWindow({
    Name = "Maple Hub",
    Icon = 0,
    LoadingTitle = "Maple Hub",
-   LoadingSubtitle = "Destroy Euphoria also.",
+   LoadingSubtitle = "Destroy Euphoria.",
    Theme = "AmberGlow",
    ToggleUIKeybind = "K",
 
