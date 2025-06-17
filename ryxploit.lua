@@ -51,7 +51,7 @@ local Window = Rayfield:CreateWindow({
 
    KeySystem = true,
    KeySettings = {
-      Title = "RyXploit",
+      Title = "Maple Hub",
       Subtitle = "Key System",
       Note = "Get the key at https://workink.net/20ny/nspl4kl9",
       FileName = "RyXploitKey",
