@@ -27,11 +27,11 @@ local function playTickSound()
 end
 
 local Window = Rayfield:CreateWindow({
-   Name = "RyXploit Script Hub",
+   Name = "Maple Hub",
    Icon = 0,
-   LoadingTitle = "RyXploit",
-   LoadingSubtitle = "by Ryan, powered by Rayfield.",
-   Theme = "Bloom",
+   LoadingTitle = "Maple Hub",
+   LoadingSubtitle = "Destroy Euphoria in the Progress.",
+   Theme = "AmberGlow",
    ToggleUIKeybind = "K",
 
    DisableRayfieldPrompts = false,
