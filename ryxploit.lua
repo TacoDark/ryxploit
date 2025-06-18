@@ -27,38 +27,34 @@ local function playTickSound()
 end
 
 local Window = Rayfield:CreateWindow({
-   Name = "Maple Hub",
-   Icon = 0,
-   LoadingTitle = "Maple Hub",
-   LoadingSubtitle = "Destroy Euphoria.",
-   Theme = "AmberGlow",
-   ToggleUIKeybind = "K",
-
-   DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false,
-
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "RyXploitHub",
-      FileName = "RyXploit_Config"
-   },
-
-   Discord = {
-      Enabled = true,
-      Invite = "yourdiscordcode",
-      RememberJoins = true
-   },
-
-   KeySystem = true,
-   KeySettings = {
-      Title = "Maple Hub",
-      Subtitle = "Key System",
-      Note = "Get the key at https://workink.net/20ny/nspl4kl9",
-      FileName = "RyXploitKey",
-      SaveKey = true,
-      GrabKeyFromSite = true,
-      Key = {"https://pastebin.com/raw/vzqjWt4j"}
-   }
+    Name = "Maple Hub",
+    Icon = 0,
+    LoadingTitle = "Maple Hub",
+    LoadingSubtitle = "Destroy Euphoria.",
+    Theme = "AmberGlow",
+    ToggleUIKeybind = "K",
+    DisableRayfieldPrompts = false,
+    DisableBuildWarnings = false,
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "RyXploitHub",
+        FileName = "RyXploit_Config"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "yourdiscordcode",
+        RememberJoins = true
+    },
+    KeySystem = true,
+    KeySettings = {
+        Title = "Maple Hub",
+        Subtitle = "Key System",
+        Note = "Get the key at https://workink.net/20ny/nspl4kl9",
+        FileName = "RyXploitKey",
+        SaveKey = true,
+        GrabKeyFromSite = true,
+        Key = {"https://pastebin.com/raw/vzqjWt4j"}
+    }
 })
 
 local players = game:GetService("Players")
@@ -107,7 +103,11 @@ PlayerTab:CreateToggle({
                 if uis:IsKeyDown(Enum.KeyCode.Space) then moveVec += cam.CFrame.UpVector end
                 if uis:IsKeyDown(Enum.KeyCode.LeftShift) then moveVec -= cam.CFrame.UpVector end
 
-                bodyVel.Velocity = moveVec.Unit * 50
+                if moveVec.Magnitude > 0 then
+                    bodyVel.Velocity = moveVec.Unit * 50
+                else
+                    bodyVel.Velocity = Vector3.new(0, 0, 0)
+                end
                 bodyGyro.CFrame = cam.CFrame
             end)
         else
@@ -216,7 +216,6 @@ PlayerTab:CreateSlider({
     end
 })
 
-
 -- Miscs Tab with icon "tool"
 local MiscsTab = Window:CreateTab("Miscs", "wrench")
 
@@ -231,7 +230,6 @@ MiscsTab:CreateButton({
         end
     end,
 })
-
 
 MiscsTab:CreateButton({
     Name = "Rejoin",
@@ -280,24 +278,58 @@ MiscsTab:CreateButton({
 })
 
 MiscsTab:CreateButton({
-    Name = "Panic",
+    Name = "Big Guy FE",
     Callback = function()
-        notifyAndPlaySound("Misc", "Panic mode!")
-        local plr = game.Players.LocalPlayer
-        if plr.Character then
-            for _, part in pairs(plr.Character:GetChildren()) do
-                if part:IsA("BasePart") then
-                    part.Transparency = 1
-                    part.CanCollide = false
-                end
-            end
-        end
+        notifyAndPlaySound("Misc", "You need a certain items equipped, this script also has reanimation.")
+        getgenv().OxideSettings = {
+            Refit = true,
+            noclip = false,
+            FlingEnabled = false,
+            ToolFling = false,
+            AntiFling = false,
+            Legacy = false,
+            Scale = 4,
+            ClientHats = {},
+            CustomHats = true,
+            CH = {
+                Torso = {
+                    Name= "Accessory (Torso)",
+                    TextureId = "83269599235494",
+                    Orientation= CFrame.new(0,0,0) * CFrame.Angles(math.rad(0),math.rad(0),math.rad(0))
+                },
+                RightArm = {
+                    Name= "Accessory (BIGGEST RIGHT ARMAccessory)",
+                    TextureId = "117484156735788", 
+                    Orientation= CFrame.Angles(math.rad(0),math.rad(90),math.rad(90))
+                },
+                LeftArm = {
+                    Name= "Accessory (BIGGEST LEFT ARMAccessory)",
+                    TextureId = "117484156735788", 
+                    Orientation= CFrame.Angles(math.rad(0),math.rad(90),math.rad(90))
+                },
+                RightLeg = {
+                    Name= "Accessory (RLeg)",
+                    TextureId = "83269599235494", 
+                    Orientation= CFrame.Angles(math.rad(0),math.rad(90),math.rad(90))
+                },
+                LeftLeg = {
+                    Name= "Accessory (LLeg)",
+                    TextureId = "83269599235494", 
+                    Orientation= CFrame.Angles(math.rad(0),math.rad(90),math.rad(90))
+                },
+                Head = {
+                    Name = "Accessory (BIG HEAD!!)",
+                    Orientation = CFrame.new(),
+                }
+            }
+        }
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Nitro-GT/Oxide/refs/heads/main/LoadstringPerma"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Nitro-GT/OxideReanim/refs/heads/main/KrystalDance3"))()
     end,
 })
 
 -- Client Sided Tab with icon "cpu"
 local ClientTab = Window:CreateTab("Client Sided", "cpu")
-
 ClientTab:CreateLabel("THESE SCRIPTS ARE CLIENT SIDED!")
 
 ClientTab:CreateButton({
@@ -352,24 +384,18 @@ ClientTab:CreateButton({
 notifyAndPlaySound("RyXploit", "Script Hub loaded!")
 
 local InfoTab = Window:CreateTab("Info", "book")
-
--- Computer Time
-InfoTab:CreateLabel("Computer Time: " .. os.date("%X"))  -- HH:MM:SS
-
+InfoTab:CreateLabel("Computer Time: " .. os.date("%X"))
 InfoTab:CreateDivider()
 
--- Roblox Version ID (not directly accessible, fallback)
 local RobloxVersion = "N/A"
 pcall(function()
     RobloxVersion = tostring(game:GetService("RunService"):IsStudio() and "Studio" or game:GetService("RobloxGui").RobloxVersionLabel.Text or "N/A")
 end)
 InfoTab:CreateLabel("Roblox Version: " .. RobloxVersion)
 
--- Roblox Server ID
 local ServerId = tostring(game.JobId or "Unknown")
 InfoTab:CreateLabel("Server ID: " .. ServerId)
 
--- Roblox Game Name and ID
 local GameName = "Unknown"
 local success, info = pcall(function()
     return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
@@ -383,7 +409,6 @@ InfoTab:CreateLabel("Game ID: " .. GameId)
 
 InfoTab:CreateDivider()
 
--- FPS and PING dynamic update
 local RunService = game:GetService("RunService")
 local Stats = game:GetService("Stats")
 local Players = game:GetService("Players")
@@ -393,18 +418,15 @@ local fpsLabel = InfoTab:CreateLabel("FPS: Calculating...")
 local pingLabel = InfoTab:CreateLabel("PING: Calculating...")
 
 local lastUpdate = 0
-local updateInterval = 1 -- seconds
+local updateInterval = 1
 
 RunService.Heartbeat:Connect(function(dt)
     lastUpdate = lastUpdate + dt
     if lastUpdate >= updateInterval then
         lastUpdate = 0
-
-        -- FPS approx
         local fps = math.floor(1/dt)
         fpsLabel:Set("FPS: " .. fps)
 
-        -- Ping approx in ms
         local ping = 0
         local success, result = pcall(function()
             return Stats.Network.ServerStatsItem["Data Ping"]:GetValue()
@@ -412,7 +434,6 @@ RunService.Heartbeat:Connect(function(dt)
         if success and result then
             ping = math.floor(result)
         else
-            -- fallback ping from LocalPlayer (average roundtrip in ms)
             if LocalPlayer then
                 ping = math.floor(LocalPlayer:GetNetworkPing() * 1000)
             end
@@ -421,11 +442,7 @@ RunService.Heartbeat:Connect(function(dt)
     end
 end)
 
-
 local MapleHospitalTab = Window:CreateTab("Maple Hospital", "hospital")
-
--- Example Teleport Buttons (add more as needed):
-
 ClientTab:CreateLabel("Maple Hospital uses an Anti Cheat. Bypass is not known at this time. Current known exploits banned are Fly.")
 
 MapleHospitalTab:CreateButton({
@@ -434,7 +451,7 @@ MapleHospitalTab:CreateButton({
         local plr = game.Players.LocalPlayer
         local char = plr.Character or plr.CharacterAdded:Wait()
         if char and char.PrimaryPart then
-            local emergencyRoomCFrame = CFrame.new(-277, 26, 202) -- replace with actual coords
+            local emergencyRoomCFrame = CFrame.new(-277, 26, 202)
             char:SetPrimaryPartCFrame(emergencyRoomCFrame)
             notifyAndPlaySound("Maple Hospital", "Teleported to Hidden 1")
         else
@@ -449,7 +466,7 @@ MapleHospitalTab:CreateButton({
         local plr = game.Players.LocalPlayer
         local char = plr.Character or plr.CharacterAdded:Wait()
         if char and char.PrimaryPart then
-            local lobbyCFrame = CFrame.new(-19, -471, -673) -- replace with actual coords
+            local lobbyCFrame = CFrame.new(-19, -471, -673)
             char:SetPrimaryPartCFrame(lobbyCFrame)
             notifyAndPlaySound("Maple Hospital", "Teleported to Hidden 2")
         else
@@ -464,7 +481,7 @@ MapleHospitalTab:CreateButton({
         local plr = game.Players.LocalPlayer
         local char = plr.Character or plr.CharacterAdded:Wait()
         if char and char.PrimaryPart then
-            local lobbyCFrame = CFrame.new(-136, 22, 9) -- replace with actual coords
+            local lobbyCFrame = CFrame.new(-136, 22, 9)
             char:SetPrimaryPartCFrame(lobbyCFrame)
             notifyAndPlaySound("Maple Hospital", "Teleported to Hidden 3")
         else
@@ -479,7 +496,7 @@ MapleHospitalTab:CreateButton({
         local plr = game.Players.LocalPlayer
         local char = plr.Character or plr.CharacterAdded:Wait()
         if char and char.PrimaryPart then
-            local lobbyCFrame = CFrame.new(-192, 4, 92) -- replace with actual coords
+            local lobbyCFrame = CFrame.new(-192, 4, 92)
             char:SetPrimaryPartCFrame(lobbyCFrame)
             notifyAndPlaySound("Maple Hospital", "Teleported to Hidden 4")
         else
@@ -490,38 +507,36 @@ MapleHospitalTab:CreateButton({
 
 local Section = MapleHospitalTab:CreateSection("Scripts")
 
-local Paragraph = MapleHospitalTab:CreateParagraph({Title = "Scripts are Here!", Content = "These scripts sometimes require extra instructions (For Example, putting on a shit load of nails or etc.)"})
+local Paragraph = MapleHospitalTab:CreateParagraph({
+    Title = "Scripts are Here!",
+    Content = "These scripts sometimes require extra instructions (For Example, putting on a shit load of nails or etc.)"
+})
 
 local equipSpamConnection
-local equipSpeed = 0.1 -- default speed
+local equipSpeed = 0.1
 
 MapleHospitalTab:CreateButton({
     Name = "Enable Auto Janitor",
     Callback = function()
         print("[Auto Janitor] Button clicked")
-
         local Players = game:GetService("Players")
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local RunService = game:GetService("RunService")
         local lp = Players.LocalPlayer
 
-        -- Get Character and Humanoid
         local char = lp.Character or lp.CharacterAdded:Wait()
         local humanoid = char:WaitForChild("Humanoid")
         local rootPart = char:WaitForChild("HumanoidRootPart")
 
-        -- Anti-sit
         humanoid:GetPropertyChangedSignal("Sit"):Connect(function()
             RunService.Heartbeat:Wait()
             humanoid.Sit = false
         end)
 
-        -- Set Role
         ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Knit"):WaitForChild("Services")
             :WaitForChild("RolesService"):WaitForChild("__comm__"):WaitForChild("RE")
             :WaitForChild("SetRole"):FireServer("Janitor")
 
-        -- Equip Mop if needed
         local MopTool = lp.Backpack:FindFirstChild("Mop")
         if not MopTool then
             print("[Auto Janitor] Requesting Mop")
@@ -534,13 +549,11 @@ MapleHospitalTab:CreateButton({
         local Bottom = MopTool:WaitForChild("Bottom")
         local Garbage = workspace:WaitForChild("Garbage")
 
-        workspace.FallenPartsDestroyHeight = 0/0 -- Infinite fall zone
+        workspace.FallenPartsDestroyHeight = 0/0
 
-        -- Unequip and re-equip properly
         humanoid:UnequipTools()
         MopTool.Parent = char
 
-        -- Clean logic
         local currentlycleaning = false
         local function clean(Spill)
             if not Spill:IsA("BasePart") then return end
@@ -563,7 +576,6 @@ MapleHospitalTab:CreateButton({
             currentlycleaning = false
         end
 
-        -- Start cleaning
         for _, v in pairs(Garbage:GetChildren()) do
             clean(v)
         end
@@ -571,9 +583,6 @@ MapleHospitalTab:CreateButton({
         print("[Auto Janitor] Running and waiting for new spills...")
     end,
 })
-
-
-
 
 MapleHospitalTab:CreateSlider({
     Name = "Equip Spam Speed",
@@ -621,7 +630,6 @@ MapleHospitalTab:CreateToggle({
 
 local UniversalTab = Window:CreateTab("Universal", "globe")
 
--- Infinite Yield
 UniversalTab:CreateButton({
     Name = "Infinite Yield",
     Callback = function()
@@ -630,7 +638,6 @@ UniversalTab:CreateButton({
     end,
 })
 
--- Dex Explorer
 UniversalTab:CreateButton({
     Name = "Dex Explorer",
     Callback = function()
